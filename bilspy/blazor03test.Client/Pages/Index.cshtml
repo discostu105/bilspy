@@ -1,0 +1,51 @@
+﻿@page "/"
+
+<h1>Blazor ILSpy</h1>
+
+<form onsubmit="startUpload(); return false;" enctype="multipart/form-data">
+    <div class="form-group file-upload-wrap">
+        <input type="file" class="form-control file-upload-input" onchange="handleFileSelect(this.files);" accept=".dll,.DLL,.exe,.EXE,.txt" />
+        <div class="drag-text">
+            <h3>Drag and drop a file or select add file</h3>
+        </div>
+    </div>
+</form>
+
+<div>filecount: @files.Count()</div>
+<div>lastfilename: @lastfilename</div>
+<div>lastdata: @lastdata</div>
+
+@functions {
+
+List<string> files = new List<string>();
+
+string lastfilename = "";
+string lastdata = "";
+
+protected override Task OnInitAsync() {
+    files.Add("test.dll");
+    return base.OnInitAsync();
+}
+
+void OnChange(UIEventArgs eventArgs) {
+    var changeEventArgs = (UIChangeEventArgs)eventArgs;
+    var filepath = changeEventArgs.Value.ToString();
+    files.Add(filepath);
+    lastfilename = filepath;
+    try {
+        lastdata = System.IO.File.ReadAllText(filepath);
+    } catch (Exception e) {
+        Console.WriteLine("error: " + e.ToString());
+    }
+}
+
+void AddFiles() {
+    //lastinput = files.Count().ToString();
+    //foreach (var file in files) {
+    //    this.files.add(file);
+    //    console.writeline(file);
+    //}
+    //return "true";
+}
+
+}
